@@ -29,10 +29,10 @@ func main() {
 
 ## Using the Cobra Generator
 
-Cobra provides its own program that will create your application and add any
+Cobra-CLI is its own program that will create your application and add any
 commands you want. It's the easiest way to incorporate Cobra into your application.
 
-For complete details on using the Cobra generator, please read [The Cobra Generator README](https://github.com/spf13/cobra/blob/master/cobra/README.md)
+For complete details on using the Cobra generator, please refer to [The Cobra-CLI Generator README](https://github.com/spf13/cobra-cli/blob/main/README.md)
 
 ## Using the Cobra Library
 
@@ -86,7 +86,7 @@ var (
 	userLicense string
 
 	rootCmd = &cobra.Command{
-		Use:   "cobra",
+		Use:   "cobra-cli",
 		Short: "A generator for Cobra based Applications",
 		Long: `Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
@@ -299,6 +299,30 @@ Or, for persistent flags:
 rootCmd.PersistentFlags().StringVarP(&Region, "region", "r", "", "AWS region (required)")
 rootCmd.MarkPersistentFlagRequired("region")
 ```
+
+### Flag Groups
+
+If you have different flags that must be provided together (e.g. if they provide the `--username` flag they MUST provide the `--password` flag as well) then 
+Cobra can enforce that requirement:
+```go
+rootCmd.Flags().StringVarP(&u, "username", "u", "", "Username (required if password is set)")
+rootCmd.Flags().StringVarP(&pw, "password", "p", "", "Password (required if username is set)")
+rootCmd.MarkFlagsRequiredTogether("username", "password")
+``` 
+
+You can also prevent different flags from being provided together if they represent mutually 
+exclusive options such as specifying an output format as either `--json` or `--yaml` but never both:
+```go
+rootCmd.Flags().BoolVar(&u, "json", false, "Output in JSON")
+rootCmd.Flags().BoolVar(&pw, "yaml", false, "Output in YAML")
+rootCmd.MarkFlagsMutuallyExclusive("json", "yaml")
+```
+
+In both of these cases:
+  - both local and persistent flags can be used
+    - **NOTE:** the group is only enforced on commands where every flag is defined
+  - a flag may appear in multiple groups
+  - a group may contain any number of flags
 
 ## Positional and Custom Arguments
 
