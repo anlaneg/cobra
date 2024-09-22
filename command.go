@@ -777,6 +777,7 @@ func (c *Command) ArgsLenAtDash() int {
 	return c.Flags().ArgsLenAtDash()
 }
 
+/*根命令执行入口*/
 func (c *Command) execute(a []string) (err error) {
 	if c == nil {
 		return fmt.Errorf("Called Execute() on a nil Command")

@@ -1,4 +1,5 @@
 BIN="./bin"
+#找出所有.go文件
 SRC=$(shell find . -name "*.go")
 
 ifeq (, $(shell which golangci-lint))
